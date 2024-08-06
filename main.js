@@ -17,8 +17,8 @@ function onScanSuccess(decodedText) {
         
         if (isNotExpired) {
             resultElement.innerHTML = `
-                <span style="color: green; background-color: #d4edda; padding: 10px; border-radius: 5px;">
-                    Email: ${memberEmail}<br>
+                <span style="color: green; background-color: #d4edda; padding: 7px; border-radius: 3px;">
+                    ${memberEmail}<br>
                     Valid until: ${expirationDateStr}
                 </span>
             `;
@@ -26,8 +26,8 @@ function onScanSuccess(decodedText) {
             statusElement.style.color = 'green';
         } else {
             resultElement.innerHTML = `
-                <span style="color: red; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
-                    Email: ${memberEmail}<br>
+                <span style="color: red; background-color: #f8d7da; padding: 7px; border-radius: 3px;">
+                    ${memberEmail}<br>
                     QR Code Has Expired.
                 </span>
             `;
