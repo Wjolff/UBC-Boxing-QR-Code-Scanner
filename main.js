@@ -1,7 +1,9 @@
 function onScanSuccess(decodedText) {
     // Extract expiration date from the decoded text
     const expirationDateMatch = decodedText.match(/Expires:\s*(\d{4}-\d{2}-\d{2})/);
-    const memberEmail = decodedText.match(/Email:\s*([^\s,]+)/);
+    const memberEmailMatch = decodedText.match(/Email:\s*([^\s,]+)/);
+    const memberEmail = memberEmailMatch[1]; // Extract email string
+    console.log(memberEmailMatch)
     
     if (expirationDateMatch) {
         const expirationDateStr = expirationDateMatch[1]; // Extract the date string
@@ -17,8 +19,9 @@ function onScanSuccess(decodedText) {
         
         if (isNotExpired) {
             resultElement.innerHTML = `
-                <span style="color: green; background-color: #d4edda; padding: 7px; border-radius: 3px;">
-                    ${memberEmail}<br>
+                Email: ${memberEmail}
+                <br><br><br>
+                <span style="color: white; background-color: green; padding: 11px; border-radius: 3px;">
                     Valid until: ${expirationDateStr}
                 </span>
             `;
@@ -26,8 +29,8 @@ function onScanSuccess(decodedText) {
             statusElement.style.color = 'green';
         } else {
             resultElement.innerHTML = `
-                <span style="color: red; background-color: #f8d7da; padding: 7px; border-radius: 3px;">
-                    ${memberEmail}<br>
+                Email: ${memberEmail}<br><br><br>
+                <span style="color: white; background-color: red; padding: 11px; border-radius: 3px;">
                     QR Code Has Expired.
                 </span>
             `;
