@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,53 +15,37 @@
             height: auto;
         }
         #result {
-            font-size: 1.5em; 
-            margin-top: 20px;
+            font-size:
+            1.5em; margin-top: 20px;
         }
         .success {
             color: green;
         }
         .expired {
             color: red;
-        }
+         }
     </style>
 </head>
 <body>
     <h1>Scan QR Code</h1>
     <div id="reader"></div>
     <p id="result"></p>
-    <p id="status" class="status"></p>
     <script>
         // Function to handle successful QR code scan
         function onScanSuccess(decodedText, decodedResult) {
-            // Fetch request to Google Apps Script to check expiration
+            document.getElementById('result').innerText = `${decodedText}`;
+
+            // Make a request to your Google Apps Script web app to check expiration
             fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?qrcode=' + encodeURIComponent(decodedText))
                 .then(response => response.json())
                 .then(data => {
-                    // Extract data from the response
-                    const expirationDate = data.expirationDate;
-                    const isValid = data.success;
-
-                    // Update result and status based on expiration date
-                    const resultElement = document.getElementById('result');
-                    const statusElement = document.getElementById('status');
-                    
-                    // QR Code is valid
-                    if (isValid) {
-                        resultElement.innerText = `QR Code is valid. Expires on: ${expirationDate}`;
-                        statusElement.innerText = 'Verified';
-                        statusElement.className = 'success';
-                    // QR Code is not valid
+                    if (data.success) {
+                        document.getElementById('result').innerText = `QR Code is valid. Expires on: ${data.expirationDate}`;
                     } else {
-                        resultElement.innerText = 'QR Code is invalid or expired.';
-                        statusElement.innerText = 'Expired';
-                        statusElement.className = 'expired';
+                        document.getElementById('result').innerText = 'QR Code is invalid or expired.';
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('result').innerText = 'An error occurred while checking the QR code.';
-                });
+                .catch(error => console.error('Error:', error));
         }
 
         // Function to handle scan errors
@@ -70,7 +53,7 @@
             console.error(`QR Code Scan Error: ${errorMessage}`);
         }
 
-        // Initialize the QR code scanner
+        // Initialize the QR code scanner (automatically asks for camera permission)
         document.addEventListener('DOMContentLoaded', function() {
             const html5QrCode = new Html5Qrcode("reader");
             html5QrCode.start(
