@@ -40,9 +40,17 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('result').innerText = `QR Code is valid. Expires on: ${data.expirationDate}`;
+                        document.getElementById('result').innerHTML = `
+                            <span style="color: green; background-color: #d4edda; padding: 10px; border-radius: 5px;">
+                                QR Code is valid. Expires on: ${data.expirationDate}
+                            </span>
+                        `;
                     } else {
-                        document.getElementById('result').innerText = 'QR Code is invalid or expired.';
+                        document.getElementById('result').innerHTML = `
+                            <span style="color: red; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+                                QR Code is invalid or has expired.
+                            </span>
+                        `;
                     }
                 })
                 .catch(error => console.error('Error:', error));
