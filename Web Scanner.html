@@ -1,10 +1,60 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Expiration Checker</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #reader {
+            width: 300px;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
-$END$
+    <h1>Scan QR Code</h1>
+    <div id="reader"></div>
+    <p id="result"></p>
+    <script>
+        // Function to handle successful QR code scan
+        function onScanSuccess(decodedText, decodedResult) {
+            document.getElementById('result').innerText = `${decodedText}`;
+
+            // Make a request to your Google Apps Script web app to check expiration
+            fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?qrcode=' + encodeURIComponent(decodedText))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('result').innerText = `QR Code is valid. Expires on: ${data.expirationDate}`;
+                    } else {
+                        document.getElementById('result').innerText = 'QR Code is invalid or expired.';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Function to handle scan errors
+        function onScanError(errorMessage) {
+            console.error(`QR Code Scan Error: ${errorMessage}`);
+        }
+
+        // Initialize the QR code scanner
+        document.addEventListener('DOMContentLoaded', function() {
+            const html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                console.error(`QR Code Scanner Error: ${err}`);
+            });
+        });
+    </script>
 </body>
 </html>
